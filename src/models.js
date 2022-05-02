@@ -13,7 +13,8 @@ if (process.env['NODE_ENV'] !== 'test') {
 const IssuesSchema = new mongoose.Schema({
   assigned_to: {
     type: String,
-    required: false
+    required: false,
+    default: ""
   },
   created_by: {
     type: String,
@@ -34,8 +35,14 @@ const IssuesSchema = new mongoose.Schema({
   },
   status_text: {
     type: String,
-    required: false
+    required: false,
+    default: ""
   },
+  project: {
+    type: String,
+    required: true,
+    select: false
+  }
 }, { 
   versionKey: false,
   timestamps: { createdAt: 'created_on', updatedAt: 'updated_on' }

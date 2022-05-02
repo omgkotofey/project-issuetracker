@@ -2,15 +2,23 @@ const { Issues } = require('./models.js');
 
 module.exports = {
   
-  findAllForProject: async (projectName) => {
-    return await Issues.find({'project': projectName}).exec();
+  findAllForProject: async (projectName, filter) => {
+    return await Issues.find({
+      'project': projectName,
+      ...filter
+    }).exec();
   },
 
   findInProjectById: async (id, projectName) => {
-    return await Issues.findOne({
-      '_id': id,
-      'project': projectName
-    }).exec();
+    try {
+      return await Issues.findOne({
+        '_id': id,
+        'project': projectName
+      }).exec();
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
   },
 
   createFromData: async (data) => {
@@ -18,11 +26,10 @@ module.exports = {
   },
 
   updateFromData: async (issue, data) => {
-    delete data._id;
-    return await Issues.findOneAndUpdate(issue._id, data);
+    return await Issues.findOneAndUpdate({_id: issue._id}, data).exec();
   },
 
   remove: async (issue) => {
-    return await Issues.findOneAndDelete(issue.id);
+    return await Issues.findOneAndDelete({_id: issue._id}).exec();
   }
 }

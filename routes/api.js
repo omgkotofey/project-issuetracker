@@ -6,8 +6,13 @@ module.exports = (app, issuesManager) =>  {
   
     .get(async(req, res) => {
       const projectName = req.params.project;
-      const issues = await issuesManager.findAllForProject(projectName, req.query);
+      try {
+        const issues = await issuesManager.findAllForProject(projectName, req.query);
       return res.status(200).json(issues);
+      } catch (err) {
+        console.error(err.message);
+        return res.status(200).json([]);
+      }
     })
     
     .post(async(req, res) => {

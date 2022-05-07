@@ -1,14 +1,12 @@
 require('dotenv').config();
-
 const mongoose = require("mongoose");
 
-if (process.env['NODE_ENV'] !== 'test') {
-  mongoose.connect(
-    process.env['MONGO_URI'], {
-    dbName: process.env['MONGO_DATABASE'],
+mongoose.connect(
+  process.env.MONGO_URI, {
+    dbName: process.env.NODE_ENV === 'test' ? process.env.MONGO_TEST_DATABASE : process.env.MONGO_DATABASE,
     useNewUrlParser: true
-  });
-}
+  }
+);
 
 const IssuesSchema = new mongoose.Schema({
   assigned_to: {
@@ -49,5 +47,6 @@ const IssuesSchema = new mongoose.Schema({
 });
 
 module.exports = {
-  Issues: mongoose.model('Issues', IssuesSchema)
+  Issues: mongoose.model('Issues', IssuesSchema),
+  IssuesSchema: IssuesSchema
 }
